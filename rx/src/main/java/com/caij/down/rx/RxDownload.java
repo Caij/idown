@@ -13,6 +13,17 @@ import io.reactivex.Flowable;
 
 public class RxDownload extends Download<Flowable<Progress>> {
 
+    public RxDownload(Engine engine, Logger logger) {
+        super(engine, logger);
+    }
+
+    public RxDownload() {
+    }
+
+    public RxDownload(Engine engine) {
+        super(engine);
+    }
+
     @Override
     public Flowable<Progress> down(String url, DataSource dataSource) {
         Flowable<Progress> progressFlowable = new CallExecuteObservable(mEngine, mLogger, url, dataSource)
