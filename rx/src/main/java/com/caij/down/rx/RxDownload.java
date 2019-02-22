@@ -27,7 +27,7 @@ public class RxDownload extends Download<Flowable<Progress>> {
     @Override
     public Flowable<Progress> down(String url, DataSource dataSource) {
         Flowable<Progress> progressFlowable = new CallExecuteObservable(mEngine, mLogger, url, dataSource)
-                .toFlowable(BackpressureStrategy.BUFFER);
+                .toFlowable(BackpressureStrategy.LATEST);
         return progressFlowable;
     }
 }

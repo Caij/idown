@@ -31,9 +31,13 @@ public class ATResult extends Result {
 
     private DataSource mDataSource;
 
-    private boolean isCancel;
+    private volatile boolean isCancel;
 
     private AsyncTask mAsyncTask;
+
+    private long mInterval = 500;
+
+    private long preUpdateTime;
 
 
     ATResult(Engine engine, Logger logger, String url, DataSource dataSource) {
@@ -110,9 +114,7 @@ public class ATResult extends Result {
                         writeTotalLength += readLength;
                         progress.read = writeTotalLength;
 
-                        if (!isCancel) {
-                            publishProgress(progress);
-                        }
+                        publishProgressInner(progress);
 
                         checkState();
                     }
@@ -129,7 +131,7 @@ public class ATResult extends Result {
 
                     checkState();
 
-                    publishProgress(progress);
+                    publishProgressInner(progress);
 
                     if (!isCancel) {
                         if (mLogger != null) mLogger.log("url onCompleted " + mUrl);
@@ -150,6 +152,13 @@ public class ATResult extends Result {
                     if (mLogger != null) mLogger.log("url Exception " + mUrl + " " + e.getClass().getSimpleName() + ":" + e.getMessage());
                 }
                 return null;
+            }
+
+            private void publishProgressInner(Progress progress) {
+                if (!isCancel && System.currentTimeMillis() - preUpdateTime > mInterval) {
+                    preUpdateTime = System.currentTimeMillis();
+                    publishProgress(progress);
+                }
             }
 
             @Override
@@ -202,5 +211,9 @@ public class ATResult extends Result {
         } catch (Exception e) {
             if (mLogger != null) mLogger.log("close Exception " + e.getClass().getSimpleName() + " : " + e.getMessage());
         }
+    }
+
+    public void setInterval(long interval) {
+        mInterval = interval;
     }
 }
