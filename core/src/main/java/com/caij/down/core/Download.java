@@ -1,7 +1,7 @@
 package com.caij.down.core;
 
 
-public abstract class Download {
+public abstract class Download<R> {
 
     protected Logger mLogger;
     protected Engine mEngine;
@@ -19,7 +19,7 @@ public abstract class Download {
         this(engine, Logger.DEFAULT);
     }
 
-    public abstract Result down(String url, DataSource dataSource);
+    public abstract R down(String url, DataSource dataSource);
 
 
 }

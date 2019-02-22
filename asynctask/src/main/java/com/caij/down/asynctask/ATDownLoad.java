@@ -4,7 +4,7 @@ import com.caij.down.core.DataSource;
 import com.caij.down.core.Download;
 import com.caij.down.core.Result;
 
-public class ATDownLoad extends Download {
+public class ATDownLoad extends Download<Result> {
 
     @Override
     public Result down(String url, DataSource dataSource) {

@@ -11,12 +11,12 @@ import com.caij.down.core.URLHttpEngine;
 import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
 
-public class RxDownload extends Download {
+public class RxDownload extends Download<Flowable<Progress>> {
 
     @Override
-    public Result down(String url, DataSource dataSource) {
+    public Flowable<Progress> down(String url, DataSource dataSource) {
         Flowable<Progress> progressFlowable = new CallExecuteObservable(mEngine, mLogger, url, dataSource)
                 .toFlowable(BackpressureStrategy.BUFFER);
-        return new RxResult(progressFlowable);
+        return progressFlowable;
     }
 }
