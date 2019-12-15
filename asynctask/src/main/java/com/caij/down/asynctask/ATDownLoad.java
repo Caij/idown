@@ -5,7 +5,7 @@ import com.caij.down.core.Download;
 import com.caij.down.core.Engine;
 import com.caij.down.core.Logger;
 
-public class ATDownLoad extends Download<Result> {
+public class ATDownLoad extends Download {
 
     public ATDownLoad(Engine engine, Logger logger) {
         super(engine, logger);
@@ -18,7 +18,6 @@ public class ATDownLoad extends Download<Result> {
         super(engine);
     }
 
-    @Override
     public Result down(String url, DataSource dataSource, long timeInterval) {
         return new ATResult(mEngine, mLogger, url, dataSource, timeInterval);
     }

@@ -1,7 +1,7 @@
 package com.caij.down.core;
 
 
-public abstract class Download<R> {
+public abstract class Download {
 
     protected Logger mLogger;
     protected Engine mEngine;

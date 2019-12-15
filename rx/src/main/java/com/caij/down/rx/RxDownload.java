@@ -4,11 +4,9 @@ import com.caij.down.core.DataSource;
 import com.caij.down.core.Download;
 import com.caij.down.core.Engine;
 import com.caij.down.core.Logger;
-import com.caij.down.core.Progress;
 
-import io.reactivex.Flowable;
 
-public class RxDownload extends Download<Flowable<Progress>> {
+public class RxDownload extends Download {
 
     public RxDownload(Engine engine, Logger logger) {
         super(engine, logger);
