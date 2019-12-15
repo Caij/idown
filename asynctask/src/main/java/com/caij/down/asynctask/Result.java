@@ -1,4 +1,6 @@
-package com.caij.down.core;
+package com.caij.down.asynctask;
+
+import com.caij.down.core.Callback;
 
 import java.util.concurrent.Executor;
 

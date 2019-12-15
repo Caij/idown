@@ -19,7 +19,5 @@ public abstract class Download<R> {
         this(engine, Logger.DEFAULT);
     }
 
-    public abstract R down(String url, DataSource dataSource);
-
 
 }

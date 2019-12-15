@@ -5,10 +5,7 @@ import com.caij.down.core.Download;
 import com.caij.down.core.Engine;
 import com.caij.down.core.Logger;
 import com.caij.down.core.Progress;
-import com.caij.down.core.Result;
-import com.caij.down.core.URLHttpEngine;
 
-import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
 
 public class RxDownload extends Download<Flowable<Progress>> {
@@ -24,10 +21,8 @@ public class RxDownload extends Download<Flowable<Progress>> {
         super(engine);
     }
 
-    @Override
-    public Flowable<Progress> down(String url, DataSource dataSource) {
-        Flowable<Progress> progressFlowable = new CallExecuteObservable(mEngine, mLogger, url, dataSource)
-                .toFlowable(BackpressureStrategy.LATEST);
-        return progressFlowable;
+    public CallFlowable down(String url, DataSource dataSource, long timeInterval) {
+        return new CallFlowable(mEngine, mLogger, url, dataSource, timeInterval);
     }
+
 }
