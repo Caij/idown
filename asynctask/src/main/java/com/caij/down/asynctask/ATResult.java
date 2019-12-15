@@ -16,7 +16,6 @@ public class ATResult extends Result {
 
     private static final int SUCCESS = 200;
 
-
     private Logger mLogger;
     private Engine mEngine;
     private String mUrl;
@@ -125,7 +124,7 @@ public class ATResult extends Result {
             @Override
             protected void onPostExecute(Object result) {
                 super.onPostExecute(result);
-                if (result instanceof Integer && result == SUCCESS) {
+                if (result instanceof Integer && result.equals(SUCCESS)) {
                     if (!isCancel) {
                         callback.onComplete();
                     }
