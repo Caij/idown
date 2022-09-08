@@ -1,1 +1,1 @@
-include ':app', ':core', ':rx', ':asynctask'
+include ':app', ':core', ':rx', ':asynctask', ':rx3'
