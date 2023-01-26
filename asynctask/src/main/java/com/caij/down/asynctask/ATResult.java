@@ -2,6 +2,7 @@ package com.caij.down.asynctask;
 
 import android.annotation.SuppressLint;
 import android.os.AsyncTask;
+import android.os.Handler;
 import android.os.SystemClock;
 
 import com.caij.down.core.Callback;
@@ -22,7 +23,6 @@ public class ATResult extends Result {
 
     private DataSource mDataSource;
 
-    private volatile boolean isCancel;
 
     private AsyncTask mAsyncTask;
 
@@ -42,7 +42,6 @@ public class ATResult extends Result {
 
     @Override
     public void cancel() {
-        isCancel = true;
         if (mCoreDowner != null) {
             mCoreDowner.cancel();
         }
@@ -67,7 +66,7 @@ public class ATResult extends Result {
                 progress.read = 0;
                 progress.total = 100;
 
-                if (isCancel) return null;
+                if (isCancelled()) return null;
 
                 mCoreDowner = new CoreDowner(mUrl, mEngine, new CoreDowner.Listener() {
 
@@ -75,7 +74,7 @@ public class ATResult extends Result {
 
                     @Override
                     public boolean isCancel() {
-                        return isCancel;
+                        return isCancelled();
                     }
 
                     @Override
@@ -98,7 +97,7 @@ public class ATResult extends Result {
 
                     @Override
                     public void onComplete(long total) {
-                        if (!isCancel) {
+                        if (!isCancelled()) {
                             progress.total = total;
                             progress.read = total;
                             publishProgress(progress);
@@ -116,7 +115,7 @@ public class ATResult extends Result {
             @Override
             protected void onProgressUpdate(Progress... values) {
                 super.onProgressUpdate(values);
-                if (!isCancel) {
+                if (!isCancelled()) {
                     callback.onProgress(values[0]);
                 }
             }
@@ -125,11 +124,11 @@ public class ATResult extends Result {
             protected void onPostExecute(Object result) {
                 super.onPostExecute(result);
                 if (result instanceof Integer && result.equals(SUCCESS)) {
-                    if (!isCancel) {
+                    if (!isCancelled()) {
                         callback.onComplete();
                     }
                 } else {
-                    if (!isCancel) {
+                    if (!isCancelled()) {
                         callback.onError(result == null ? null : (Throwable) result);
                     }
                 }
