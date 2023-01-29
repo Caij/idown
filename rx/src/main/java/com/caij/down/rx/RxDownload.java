@@ -5,6 +5,8 @@ import com.caij.down.core.Download;
 import com.caij.down.core.Engine;
 import com.caij.down.core.Logger;
 
+import java.util.Map;
+
 
 public class RxDownload extends Download {
 
@@ -20,7 +22,10 @@ public class RxDownload extends Download {
     }
 
     public CallFlowable down(String url, DataSource dataSource, long timeInterval) {
-        return new CallFlowable(mEngine, mLogger, url, dataSource, timeInterval);
+        return new CallFlowable(mEngine, mLogger, url, null, dataSource, timeInterval);
     }
 
+    public CallFlowable down(String url, Map<String, String> headers, DataSource dataSource, long timeInterval) {
+        return new CallFlowable(mEngine, mLogger, url, headers, dataSource, timeInterval);
+    }
 }

@@ -8,6 +8,8 @@ import com.caij.down.core.Engine;
 import com.caij.down.core.Logger;
 import com.caij.down.core.Progress;
 
+import java.util.Map;
+
 import io.reactivex.rxjava3.core.BackpressureStrategy;
 import io.reactivex.rxjava3.core.Flowable;
 import io.reactivex.rxjava3.core.FlowableEmitter;
@@ -17,6 +19,7 @@ import io.reactivex.rxjava3.functions.Action;
 
 public class CallFlowable implements FlowableOnSubscribe<Progress> {
 
+    private final Map<String, String> mHeaders;
     private Logger mLogger;
     private Engine mEngine;
     private String mUrl;
@@ -26,12 +29,13 @@ public class CallFlowable implements FlowableOnSubscribe<Progress> {
 
     private long mTimeInterval;
 
-    CallFlowable(Engine engine, Logger logger, String url, DataSource dataSource, long timeInterval) {
+    CallFlowable(Engine engine, Logger logger, String url, Map<String, String> headers, DataSource dataSource, long timeInterval) {
         mLogger = logger;
         mUrl = url;
         mDataSource = dataSource;
         mEngine = engine;
         mTimeInterval = timeInterval;
+        mHeaders = headers;
     }
 
     @Override
@@ -50,7 +54,7 @@ public class CallFlowable implements FlowableOnSubscribe<Progress> {
             emitter.onNext(progress);
         }
 
-        mCoreDowner = new CoreDowner(mUrl, mEngine, new CoreDowner.Listener() {
+        mCoreDowner = new CoreDowner(mUrl, mHeaders, mEngine, new CoreDowner.Listener() {
 
             private long mPreTime;
 

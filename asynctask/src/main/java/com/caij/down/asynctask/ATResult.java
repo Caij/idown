@@ -12,6 +12,8 @@ import com.caij.down.core.Engine;
 import com.caij.down.core.Logger;
 import com.caij.down.core.Progress;
 
+import java.util.Map;
+
 
 public class ATResult extends Result {
 
@@ -30,15 +32,16 @@ public class ATResult extends Result {
 
     private long mTimeInterval;
 
+    private final Map<String, String> mHeaders;
 
-    ATResult(Engine engine, Logger logger, String url, DataSource dataSource, long timeInterval) {
+    ATResult(Engine engine, Logger logger, String url, Map<String, String> headers, DataSource dataSource, long timeInterval) {
         mLogger = logger;
         mEngine = engine;
         mUrl = url;
         mDataSource = dataSource;
         mTimeInterval = timeInterval;
+        mHeaders = headers;
     }
-
 
     @Override
     public void cancel() {
@@ -68,7 +71,7 @@ public class ATResult extends Result {
 
                 if (isCancelled()) return null;
 
-                mCoreDowner = new CoreDowner(mUrl, mEngine, new CoreDowner.Listener() {
+                mCoreDowner = new CoreDowner(mUrl, mHeaders, mEngine, new CoreDowner.Listener() {
 
                     private long mPreTime;
 
@@ -133,7 +136,7 @@ public class ATResult extends Result {
                     }
                 }
             }
-        };
+        }.executeOnExecutor(mExeExecutor);
         return this;
     }
 }

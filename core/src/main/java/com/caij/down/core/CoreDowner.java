@@ -3,6 +3,7 @@ package com.caij.down.core;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Map;
 
 public class CoreDowner {
 
@@ -14,13 +15,15 @@ public class CoreDowner {
     private final Listener mListener;
     private final Logger mLogger;
     private final DataSource mDataSource;
+    private final Map<String, String> mHeaders;
 
-    public CoreDowner(String url, Engine engine, Listener listener, Logger logger, DataSource dataSource) {
+    public CoreDowner(String url, Map<String, String> headers, Engine engine, Listener listener, Logger logger, DataSource dataSource) {
         mEngine = engine;
         mUrl = url;
         mListener = listener;
         mLogger = logger;
         mDataSource = dataSource;
+        mHeaders = headers;
     }
 
     public void start() {
@@ -29,7 +32,7 @@ public class CoreDowner {
         try {
             mConnection = mEngine.createConnection(mUrl);
 
-            mConnection.connect();
+            mConnection.connect(mHeaders);
 
             checkState();
 
