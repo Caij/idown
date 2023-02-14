@@ -62,7 +62,7 @@ public class ATResult extends Result {
             Object result;
 
             @Override
-            protected Integer doInBackground(Void... voids) {
+            protected Object doInBackground(Void... voids) {
                 if (mLogger != null) mLogger.log(Thread.currentThread().getName() + " start down url " + mUrl);
 
                 final Progress progress = new Progress();
@@ -112,7 +112,7 @@ public class ATResult extends Result {
 
                 mCoreDowner.start();
 
-                return SUCCESS;
+                return result;
             }
 
             @Override
