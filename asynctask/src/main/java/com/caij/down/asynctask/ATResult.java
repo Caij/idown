@@ -45,12 +45,12 @@ public class ATResult extends Result {
 
     @Override
     public void cancel() {
-        if (mCoreDowner != null) {
-            mCoreDowner.cancel();
-        }
-
-        if (mAsyncTask != null) {
-            mAsyncTask.cancel(true);
+        if (mAsyncTask != null && !mAsyncTask.isCancelled()
+                && mAsyncTask.getStatus() == AsyncTask.Status.RUNNING) {
+            mAsyncTask.cancel(false);
+            if (mCoreDowner != null) {
+                mCoreDowner.cancel();
+            }
         }
     }
 
