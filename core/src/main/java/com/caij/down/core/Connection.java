@@ -18,5 +18,4 @@ public interface Connection {
 
     long getContentLength();
 
-    void cancel();
 }

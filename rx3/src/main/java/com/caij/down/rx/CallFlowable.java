@@ -104,9 +104,6 @@ public class CallFlowable implements FlowableOnSubscribe<Progress> {
 
     public void cancel() {
         mLogger.log("cancel");
-        if (mCoreDowner != null) {
-            mCoreDowner.cancel();
-        }
     }
 
 

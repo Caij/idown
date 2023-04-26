@@ -68,15 +68,6 @@ public class URLHttpEngine implements Engine {
             return Long.parseLong(mConnection.getHeaderField("Content-Length"));
         }
 
-        @Override
-        public void cancel() {
-            try {
-                if (mConnection != null) mConnection.disconnect();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
         private void checkState() {
             if (mConnection == null) throw new IllegalStateException("not connect");
         }

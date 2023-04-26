@@ -90,13 +90,11 @@ public class CoreDowner {
     }
 
     private void save(InputStream inputStream, OutputStream outputStream, long total) throws IOException, InterruptedException {
+        checkState();
+
         byte[] buf = new byte[BUF_LONG];
         int readLength;
         long writeTotalLength = 0;
-
-        if (mListener.isCancel()) {
-            throwCancelException();
-        }
 
         while ((readLength = inputStream.read(buf)) != -1) {
             outputStream.write(buf, 0, readLength);
@@ -140,12 +138,6 @@ public class CoreDowner {
 
     private void throwCancelException() throws InterruptedException {
         throw new InterruptedException("No subscription, cancel download");
-    }
-
-    public void cancel() {
-        if (mConnection != null) {
-            mConnection.cancel();
-        }
     }
 
     public interface Listener {

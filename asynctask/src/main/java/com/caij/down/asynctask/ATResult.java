@@ -34,6 +34,8 @@ public class ATResult extends Result {
 
     private final Map<String, String> mHeaders;
 
+    private  Callback mCallback;
+
     ATResult(Engine engine, Logger logger, String url, Map<String, String> headers, DataSource dataSource, long timeInterval) {
         mLogger = logger;
         mEngine = engine;
@@ -47,16 +49,21 @@ public class ATResult extends Result {
     public void cancel() {
         if (mAsyncTask != null && !mAsyncTask.isCancelled()
                 && mAsyncTask.getStatus() == AsyncTask.Status.RUNNING) {
+            mCallback = null;
             mAsyncTask.cancel(false);
-            if (mCoreDowner != null) {
-                mCoreDowner.cancel();
-            }
         }
     }
 
-    @SuppressLint("StaticFieldLeak")
+
     @Override
     public Result execute(final Callback callback) {
+        mCallback = callback;
+        startDown();
+        return this;
+    }
+
+    @SuppressLint("StaticFieldLeak")
+    private void startDown() {
         mAsyncTask = new AsyncTask<Void, Progress, Object>(){
 
             Object result;
@@ -118,8 +125,8 @@ public class ATResult extends Result {
             @Override
             protected void onProgressUpdate(Progress... values) {
                 super.onProgressUpdate(values);
-                if (!isCancelled()) {
-                    callback.onProgress(values[0]);
+                if (!isCancelled() && mCallback != null) {
+                    mCallback.onProgress(values[0]);
                 }
             }
 
@@ -127,16 +134,15 @@ public class ATResult extends Result {
             protected void onPostExecute(Object result) {
                 super.onPostExecute(result);
                 if (result instanceof Integer && result.equals(SUCCESS)) {
-                    if (!isCancelled()) {
-                        callback.onComplete();
+                    if (!isCancelled() && mCallback != null) {
+                        mCallback.onComplete();
                     }
-                } else {
-                    if (!isCancelled()) {
-                        callback.onError(result == null ? null : (Throwable) result);
+                } else if (result instanceof Throwable){
+                    if (!isCancelled() && mCallback != null) {
+                        mCallback.onError((Throwable) result);
                     }
                 }
             }
         }.executeOnExecutor(mExeExecutor);
-        return this;
     }
 }
